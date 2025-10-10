@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "warfarin-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-09-30",
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "kv_namespaces": [
+    {
+      "binding": "WARFARIN_EFDATA",
+      "id": "ed31e904fc7c4fc982514a9958f4d524"
+    }
+  ]
+}
