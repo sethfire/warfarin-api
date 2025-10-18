@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import { Bindings, CURRENT_VERSION, SUPPORTED_LANGUAGES } from '../config'
+import { API_VERSION, Bindings, GAME_VERSION, SUPPORTED_LANGUAGES } from '../config'
 import { fetchData, fetchI18nTextTable, resolveI18n } from '../services/data'
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -8,7 +8,7 @@ app.get(`/v1/:lang/enemies`, async (c) => {
   const lang: string = c.req.param('lang')
   if (!SUPPORTED_LANGUAGES.includes(lang)) return c.notFound()
 
-  const cache = await c.env.WARFARIN_EFDATA.get(`${CURRENT_VERSION}/${lang}/enemies`, 'json')
+  const cache = await c.env.WARFARIN_EFDATA.get(`${API_VERSION}/${GAME_VERSION}/${lang}/enemies`, 'json')
   if (cache) return c.json(cache)
 
   const i18nDict: any = await fetchI18nTextTable(lang)
@@ -25,7 +25,7 @@ app.get(`/v1/:lang/enemies`, async (c) => {
   }))
 
   c.executionCtx.waitUntil(
-    c.env.WARFARIN_EFDATA.put(`${CURRENT_VERSION}/${lang}/enemies`, JSON.stringify(enemies), { expirationTtl: 24 * 60 * 60 * 30 })
+    c.env.WARFARIN_EFDATA.put(`${API_VERSION}/${GAME_VERSION}/${lang}/enemies`, JSON.stringify(enemies), { expirationTtl: 24 * 60 * 60 * 30 })
   )
 
   return c.json(enemies)
@@ -36,7 +36,7 @@ app.get(`/v1/:lang/enemies/:slug`, async (c) => {
   const slug: string = c.req.param('slug')
   if (!SUPPORTED_LANGUAGES.includes(lang)) return c.notFound()
 
-  const cache = await c.env.WARFARIN_EFDATA.get(`${CURRENT_VERSION}/${lang}/enemies/${slug}`, 'json')
+  const cache = await c.env.WARFARIN_EFDATA.get(`${API_VERSION}/${GAME_VERSION}/${lang}/enemies/${slug}`, 'json')
   if (cache) return c.json(cache)
 
   const i18nDict: any = await fetchI18nTextTable(lang)
@@ -70,7 +70,7 @@ app.get(`/v1/:lang/enemies/:slug`, async (c) => {
       name: resolveI18n(enemy.name, i18nDict),
       lang: lang,
       type: 'enemy',
-      version: CURRENT_VERSION,
+      version: GAME_VERSION,
     },
     'enemyTemplateDisplayInfoTable': resolveI18n(enemy, i18nDict),
     'enemyAttributeTemplateTable': resolveI18n(enemyStats, i18nDict),
@@ -78,7 +78,7 @@ app.get(`/v1/:lang/enemies/:slug`, async (c) => {
   }
 
   c.executionCtx.waitUntil(
-    c.env.WARFARIN_EFDATA.put(`${CURRENT_VERSION}/${lang}/enemies/${slug}`, JSON.stringify(payload), { expirationTtl: 24 * 60 * 60 * 30 })
+    c.env.WARFARIN_EFDATA.put(`${API_VERSION}/${GAME_VERSION}/${lang}/enemies/${slug}`, JSON.stringify(payload), { expirationTtl: 24 * 60 * 60 * 30 })
   )
 
   return c.json(payload)

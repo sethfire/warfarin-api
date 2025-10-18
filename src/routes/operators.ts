@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import { Bindings, CURRENT_VERSION, SUPPORTED_LANGUAGES, TEMP_CHARACTER_LIST } from '../config'
+import { API_VERSION, Bindings, GAME_VERSION, SUPPORTED_LANGUAGES, TEMP_CHARACTER_LIST } from '../config'
 import { fetchData, fetchI18nTextTable, resolveI18n } from '../services/data'
 import slugify from 'slugify'
 
@@ -9,7 +9,7 @@ app.get(`/v1/:lang/operators`, async (c) => {
   const lang: string = c.req.param('lang')
   if (!SUPPORTED_LANGUAGES.includes(lang)) return c.notFound()
 
-  const cache = await c.env.WARFARIN_EFDATA.get(`${CURRENT_VERSION}/${lang}/operators`, 'json')
+  const cache = await c.env.WARFARIN_EFDATA.get(`${API_VERSION}/${GAME_VERSION}/${lang}/operators`, 'json')
   if (cache) return c.json(cache)
 
   const i18nDictEN: any = await fetchI18nTextTable('en')
@@ -34,7 +34,7 @@ app.get(`/v1/:lang/operators`, async (c) => {
     }))
 
   c.executionCtx.waitUntil(
-    c.env.WARFARIN_EFDATA.put(`${CURRENT_VERSION}/${lang}/operators`, JSON.stringify(characters), { expirationTtl: 24 * 60 * 60 * 30 })
+    c.env.WARFARIN_EFDATA.put(`${API_VERSION}/${GAME_VERSION}/${lang}/operators`, JSON.stringify(characters), { expirationTtl: 24 * 60 * 60 * 30 })
   )
 
   return c.json(characters)
@@ -45,7 +45,7 @@ app.get(`/v1/:lang/operators/:slug`, async (c) => {
   const slug: string = c.req.param('slug')
   if (!SUPPORTED_LANGUAGES.includes(lang)) return c.notFound()
 
-  const cache = await c.env.WARFARIN_EFDATA.get(`${CURRENT_VERSION}/${lang}/operators/${slug}`, 'json')
+  const cache = await c.env.WARFARIN_EFDATA.get(`${API_VERSION}/${GAME_VERSION}/${lang}/operators/${slug}`, 'json')
   if (cache) return c.json(cache)
 
   if (!(slug in TEMP_CHARACTER_LIST)) return c.notFound()
@@ -126,7 +126,7 @@ app.get(`/v1/:lang/operators/:slug`, async (c) => {
       name: resolveI18n(char.name, i18nDict),
       lang,
       type: 'operator',
-      version: CURRENT_VERSION,
+      version: GAME_VERSION,
     },
     characterTable: resolvedChar,
     charGrowthTable: charGrowth,
@@ -142,7 +142,7 @@ app.get(`/v1/:lang/operators/:slug`, async (c) => {
   }
 
   c.executionCtx.waitUntil(
-    c.env.WARFARIN_EFDATA.put(`${CURRENT_VERSION}/${lang}/operators/${slug}`, JSON.stringify(payload), { expirationTtl: 24 * 60 * 60 * 30 })
+    c.env.WARFARIN_EFDATA.put(`${API_VERSION}/${GAME_VERSION}/${lang}/operators/${slug}`, JSON.stringify(payload), { expirationTtl: 24 * 60 * 60 * 30 })
   )
 
   return c.json(payload)

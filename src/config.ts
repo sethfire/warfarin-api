@@ -6,7 +6,8 @@ export const DATA_URL = 'https://data.warfarin.wiki'
 export const DATA_VERSION = 'v1'
 
 export const SUPPORTED_LANGUAGES = ['en', 'cn', 'jp', 'kr', 'tc']
-export const CURRENT_VERSION = 'cbt2'
+export const API_VERSION = 'v1'
+export const GAME_VERSION = 'cbt2'
 
 // Cache TTL: 30 days
 export const CACHE_TTL = 24 * 60 * 60 * 30
