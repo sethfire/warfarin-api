@@ -5,6 +5,7 @@ import weapons from './routes/weapons'
 import enemies from './routes/enemies'
 import items from './routes/items'
 import lore from './routes/lore'
+import documents from './routes/documents'
 import tutorials from './routes/tutorials'
 import facilities from './routes/facilities'
 
@@ -19,6 +20,7 @@ app.route('/', weapons)
 app.route('/', enemies)
 app.route('/', items)
 app.route('/', lore)
+app.route('/', documents)
 app.route('/', tutorials)
 app.route('/', facilities)
 
