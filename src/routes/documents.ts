@@ -17,9 +17,6 @@ app.get(`/v1/:lang/documents`, async (c) => {
   const prtsDocument: any = await fetchData('PrtsDocument.json')
   if (!prtsDocument) return c.json({ error: 'Internal Server Error' }, 500)
 
-  // const richContentTable: any = await fetchData('RichContentTable.json')
-  // if (!richContentTable) return c.json({ error: 'Internal Server Error' }, 500)
-
   const documents = Object.entries(prtsDocument).map(([key, value]: [string, any]) => ({
     slug: key,
     id: key,

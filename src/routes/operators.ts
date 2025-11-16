@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import { API_VERSION, Bindings, GAME_VERSION, SUPPORTED_LANGUAGES, TEMP_CHARACTER_LIST } from '../config'
+import { API_VERSION, Bindings, CACHE_TTL, GAME_VERSION, SUPPORTED_LANGUAGES, TEMP_CHARACTER_LIST } from '../config'
 import { fetchData, fetchI18nTextTable, resolveI18n } from '../services/data'
 import slugify from 'slugify'
 
@@ -34,7 +34,7 @@ app.get(`/v1/:lang/operators`, async (c) => {
     }))
 
   c.executionCtx.waitUntil(
-    c.env.WARFARIN_EFDATA.put(`${API_VERSION}/${GAME_VERSION}/${lang}/operators`, JSON.stringify(characters), { expirationTtl: 24 * 60 * 60 * 30 })
+    c.env.WARFARIN_EFDATA.put(`${API_VERSION}/${GAME_VERSION}/${lang}/operators`, JSON.stringify(characters), { expirationTtl: CACHE_TTL })
   )
 
   return c.json(characters)
@@ -142,7 +142,7 @@ app.get(`/v1/:lang/operators/:slug`, async (c) => {
   }
 
   c.executionCtx.waitUntil(
-    c.env.WARFARIN_EFDATA.put(`${API_VERSION}/${GAME_VERSION}/${lang}/operators/${slug}`, JSON.stringify(payload), { expirationTtl: 24 * 60 * 60 * 30 })
+    c.env.WARFARIN_EFDATA.put(`${API_VERSION}/${GAME_VERSION}/${lang}/operators/${slug}`, JSON.stringify(payload), { expirationTtl: CACHE_TTL })
   )
 
   return c.json(payload)

@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import { API_VERSION, Bindings, GAME_VERSION, SUPPORTED_LANGUAGES } from '../config'
+import { API_VERSION, Bindings, CACHE_TTL, GAME_VERSION, SUPPORTED_LANGUAGES } from '../config'
 import { fetchData, fetchI18nTextTable, resolveI18n } from '../services/data'
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -25,7 +25,7 @@ app.get(`/v1/:lang/enemies`, async (c) => {
   }))
 
   c.executionCtx.waitUntil(
-    c.env.WARFARIN_EFDATA.put(`${API_VERSION}/${GAME_VERSION}/${lang}/enemies`, JSON.stringify(enemies), { expirationTtl: 24 * 60 * 60 * 30 })
+    c.env.WARFARIN_EFDATA.put(`${API_VERSION}/${GAME_VERSION}/${lang}/enemies`, JSON.stringify(enemies), { expirationTtl: CACHE_TTL })
   )
 
   return c.json(enemies)
@@ -78,7 +78,7 @@ app.get(`/v1/:lang/enemies/:slug`, async (c) => {
   }
 
   c.executionCtx.waitUntil(
-    c.env.WARFARIN_EFDATA.put(`${API_VERSION}/${GAME_VERSION}/${lang}/enemies/${slug}`, JSON.stringify(payload), { expirationTtl: 24 * 60 * 60 * 30 })
+    c.env.WARFARIN_EFDATA.put(`${API_VERSION}/${GAME_VERSION}/${lang}/enemies/${slug}`, JSON.stringify(payload), { expirationTtl: CACHE_TTL })
   )
 
   return c.json(payload)

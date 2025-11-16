@@ -9,8 +9,8 @@ export const SUPPORTED_LANGUAGES = ['en', 'cn', 'jp', 'kr', 'tc']
 export const API_VERSION = 'v1'
 export const GAME_VERSION = 'cbt2'
 
-// Cache TTL: 30 days
-export const CACHE_TTL = 24 * 60 * 60 * 30
+// Cache TTL: 1 day
+export const CACHE_TTL = 24 * 60 * 60
 
 export const TEMP_CHARACTER_LIST: Record<string, string> = {
   "endministrator": "chr_0003_endminf",
